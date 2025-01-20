@@ -45,6 +45,33 @@ const createUser = async (req, res) => {
     }
 }
 
+const userVerify =  async (req, res) => {
+    try {
+        const requestBody = req.body;
+        const payload = await validate.payload(requestBody , 'userVerify')
+        const checkUser = await db.get('users', `email $eq ${payload.email}`);
+        if (!checkUser)
+            return  standardManageError(
+                req, 
+                res, 
+                `User ${payload.email} doesn't exists.. please create user first`, 
+                'notFound'
+            );
+        return res.json({
+            code: 200,
+            message: "User verifed successfully"
+        });
+    } catch (exception) {
+        console.log(exception);
+        const errorMessage = errorMapping[exception.code] ||
+            exception.message ||
+            'An unexpected error occurred. Please try again later.';
+        const errorType = exception.message ? 'exception' : 'validate';
+        return standardManageError(req, res, errorMessage, errorType);
+
+    }
+}
+
 /**
  * @description - this fucniton used get oll users details 
  */
@@ -209,6 +236,7 @@ const filterData = async (req, res) => {
 
 export{
     createUser,
+    userVerify,
     getAllUser,
     deleteUser,
     filterData

@@ -40,6 +40,16 @@ const createUser = Joi.object({
     }),
 });
 
+const userVerify = Joi.object({
+    email: Joi.string().email().min(5).max(50).custom(isNotHttpUrlOrModule).required().messages({
+        'string.base': 'Email must be a string.',
+        'string.email': 'Please provide a valid email address.',
+        'string.min': 'Email must be at least 5 characters long.',
+        'string.max': 'Email cannot exceed 50 characters.',
+        'any.required': 'Email is required.',
+        'string.custom': 'HTTP URLs are not allowed or unexpected values.'
+    }),
+})
 
 const createProducts = Joi.object({
     productName: Joi.string().trim().min(1).max(30).required().messages({
@@ -93,6 +103,7 @@ const updateProduct = Joi.object({
 
 export {
     createUser,
+    userVerify,
     createProducts,
     updateProduct
 }

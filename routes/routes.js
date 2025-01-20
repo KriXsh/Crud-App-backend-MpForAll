@@ -16,6 +16,10 @@ const handler = (app) => {
         user.createUser(req,res)
     })
 
+    app.post('/user/verify',(req,res) => {
+        user.userVerify(req,res)
+    })
+
     app.get('/get/all/users',(req,res) =>{
         user.getAllUser(req, res)
     })
