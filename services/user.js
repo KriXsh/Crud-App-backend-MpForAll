@@ -45,6 +45,10 @@ const createUser = async (req, res) => {
     }
 }
 
+
+/**
+ * @description - this fucniton used to verify all users details
+ */
 const userVerify =  async (req, res) => {
     try {
         const requestBody = req.body;
@@ -73,7 +77,43 @@ const userVerify =  async (req, res) => {
 }
 
 /**
- * @description - this fucniton used get oll users details 
+ * @description - this fucniton used to update all users details
+ */
+const updateUser =  async (req, res) => {
+    try {
+        const requestBody = req.body;
+        const payload = await validate.payload(requestBody , 'updateUser')
+        const checkUser = await db.get('users', `email $eq ${payload.email}`);
+        if (!checkUser)
+            return  standardManageError(
+                req, 
+                res, 
+                `User ${payload.email} doesn't exists.. please create user first`, 
+                'notFound'
+            );
+            const dbPayload = {
+                ...payload,
+                updateAt: new Date(),
+            }
+            await db.update('users', `email $eq ${payload.email}`, dbPayload);
+            return res.json({
+                code: 200,
+                message: "User details updated successfully",
+            });        
+       
+    } catch (exception) {
+        console.log(exception);
+        const errorMessage = errorMapping[exception.code] ||
+            exception.message ||
+            'An unexpected error occurred. Please try again later.';
+        const errorType = exception.message ? 'exception' : 'validate';
+        return standardManageError(req, res, errorMessage, errorType);
+    }
+}
+
+
+/**
+ * @description - this fucniton used get all users details 
  */
 
 const getAllUser = async (req, res) =>{
@@ -236,6 +276,7 @@ const filterData = async (req, res) => {
 
 export{
     createUser,
+    updateUser,
     userVerify,
     getAllUser,
     deleteUser,

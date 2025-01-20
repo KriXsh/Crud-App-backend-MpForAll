@@ -51,6 +51,32 @@ const userVerify = Joi.object({
     }),
 })
 
+
+const updateUser =  Joi.object({
+    email: Joi.string().email().min(5).max(50).custom(isNotHttpUrlOrModule).required().messages({
+        'string.base': 'Email must be a string.',
+        'string.email': 'Please provide a valid email address.',
+        'string.min': 'Email must be at least 5 characters long.',
+        'string.max': 'Email cannot exceed 50 characters.',
+        'any.required': 'Email is required.',
+        'string.custom': 'HTTP URLs are not allowed or unexpected values.'
+    }),
+    name: Joi.string().trim().min(1).max(30).required().messages({
+        'string.base': 'name must be a string.',
+        'string.empty': 'name cannot be empty.',
+        'string.min': 'name must be at least 1 character long.',
+        'string.max': 'name cannot exceed 30 characters.',
+        'any.required': 'name is required.'
+    }),
+    mobile: Joi.string().min(7).max(15).custom(isNotHttpUrlOrModule).required().messages({
+        'string.base': 'Mobile number must be a string.',
+        'string.min': 'Mobile number must be at least 7 characters long.',
+        'string.max': 'Mobile number cannot exceed 15 characters.',
+        'any.required': 'Mobile number is required.',
+        'string.custom': 'HTTP URLs are not allowed or unexpected values.'
+    }),
+})
+
 const createProducts = Joi.object({
     productName: Joi.string().trim().min(1).max(30).required().messages({
         'string.base': 'name must be a string.',
@@ -104,6 +130,7 @@ const updateProduct = Joi.object({
 export {
     createUser,
     userVerify,
+    updateUser,
     createProducts,
     updateProduct
 }

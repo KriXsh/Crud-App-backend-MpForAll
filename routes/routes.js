@@ -20,6 +20,10 @@ const handler = (app) => {
         user.userVerify(req,res)
     })
 
+    app.put('/update/user',(req,res) => {
+        user.updateUser(req,res)
+    })
+
     app.get('/get/all/users',(req,res) =>{
         user.getAllUser(req, res)
     })
